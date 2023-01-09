@@ -10,11 +10,19 @@ import javax.servlet.http.HttpServletResponse;
 
 public class MainServlet extends HttpServlet {
   private PostController controller;
+  private PostRepository repository;
+  private PostService service;
+  private final String getMethod = "GET";
+  private final String postMethod = "POST";
+  private final String deleteMethod = "DELETE";
+  private final String pathForReadingAllPosts = "/api/posts/?$";
+  private final String pathForSavePost = "/api/posts";
+  private final String regexForGetAndRemovePost = "/api/posts/\\d+";
 
   @Override
   public void init() {
-    final var repository = new PostRepository();
-    final var service = new PostService(repository);
+    repository = new PostRepository();
+    service = new PostService(repository);
     controller = new PostController(service);
   }
 
@@ -25,19 +33,19 @@ public class MainServlet extends HttpServlet {
       final var path = req.getRequestURI();
       final var method = req.getMethod();
       // primitive routing
-      if (method.equals("GET") && path.equals("/api/posts/?$")) {
+      if (method.equals(getMethod) && path.equals(pathForReadingAllPosts)) {
         controller.all(resp);
         return;
       }
-      if (method.equals("POST") && path.equals("/api/posts")) {
+      if (method.equals(postMethod) && path.equals(pathForSavePost)) {
         controller.save(req.getReader(), resp);
         return;
       }
-      if (method.equals("DELETE") && path.matches("/api/posts/\\d+")) {
+      if (method.equals(deleteMethod) && path.matches("regexForGetAndRemovePost")) {
         controller.removeById(getPostID(path), resp);
         return;
       }
-      if (method.equals("GET") && path.matches("/api/posts/\\d+")) {
+      if (method.equals(getMethod) && path.matches("regexForGetAndRemovePost")) {
         // easy way
         controller.getById(getPostID(path), resp);
         return;
