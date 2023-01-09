@@ -41,11 +41,11 @@ public class MainServlet extends HttpServlet {
         controller.save(req.getReader(), resp);
         return;
       }
-      if (method.equals(deleteMethod) && path.matches("regexForGetAndRemovePost")) {
+      if (method.equals(deleteMethod) && path.matches(regexForGetAndRemovePost)) {
         controller.removeById(getPostID(path), resp);
         return;
       }
-      if (method.equals(getMethod) && path.matches("regexForGetAndRemovePost")) {
+      if (method.equals(getMethod) && path.matches(regexForGetAndRemovePost)) {
         // easy way
         controller.getById(getPostID(path), resp);
         return;
